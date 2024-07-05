@@ -1,78 +1,92 @@
-//given two matrices of sizes n*m and n1*m1 
-//find multiplication of the two matrices and print it
-#include <bits/stdc++.h>
+#include <iostream>
 using namespace std;
 
-int main()
-{
-    int n,m,n1,m1;
-   // cout<<"Enter the dimensions of first matrix\n";
-    cin>>n>>m;
-    int a[n][m];
-   // cout<<"Enter the elements of first matrix\n";
-    for(int i=0;i<n;i++)
-    {
-        for(int j=0;j<m;j++)
-        {
-            cin>>a[i][j];
+void multiplyMatrices(int** firstMatrix, int** secondMatrix, int** result, int row1, int col1, int row2, int col2) {
+    // Initializing elements of result matrix to 0
+    for (int i = 0; i < row1; ++i) {
+        for (int j = 0; j < col2; ++j) {
+            result[i][j] = 0;
         }
     }
-    //cout<<"Enter the dimensions of Second matrix\n";
-    cin>>n1>>m1;
-    int b[n1][m1];
-    //cout<<"Enter the elements of second matrix\n";
-    for(int i=0;i<n1;i++)
-    {
-        for(int j=0;j<m1;j++)
-        {
-            cin>>b[i][j];
+
+    // Multiplying firstMatrix and secondMatrix and storing in result
+    for (int i = 0; i < row1; ++i) {
+        for (int j = 0; j < col2; ++j) {
+            for (int k = 0; k < col1; ++k) {
+                result[i][j] += firstMatrix[i][k] * secondMatrix[k][j];
+            }
         }
     }
-    if(m!=n1)
-    {
-        cout<<"Multiplication of the matrices is not possible";
+}
+
+void display(int** matrix, int row, int col) {
+    for (int i = 0; i < row; ++i) {
+        for (int j = 0; j < col; ++j) {
+            cout << matrix[i][j] << " ";
+        }
+        cout << endl;
     }
-    else
-    {
-        int c[n][m1];
-        for(int i=0;i<n;i++)
-        {
-            for(int j=0;j<m1;j++)
-            {
-                c[i][j]=0;
-            }
+}
+
+int main() {
+    int row1, col1, row2, col2;
+    
+    cout << "Enter rows and columns for the first matrix: ";
+    cin >> row1 >> col1;
+
+    cout << "Enter rows and columns for the second matrix: ";
+    cin >> row2 >> col2;
+
+    // Checking if multiplication is possible
+    if (col1 != row2) {
+        cout << "Matrix multiplication is not possible." << endl;
+        return 0;
+    }
+
+    // Dynamic memory allocation for matrices
+    int** firstMatrix = new int*[row1];
+    for (int i = 0; i < row1; ++i)
+        firstMatrix[i] = new int[col1];
+
+    int** secondMatrix = new int*[row2];
+    for (int i = 0; i < row2; ++i)
+        secondMatrix[i] = new int[col2];
+
+    int** result = new int*[row1];
+    for (int i = 0; i < row1; ++i)
+        result[i] = new int[col2];
+
+    cout << "Enter elements of the first matrix:" << endl;
+    for (int i = 0; i < row1; ++i) {
+        for (int j = 0; j < col1; ++j) {
+            cin >> firstMatrix[i][j];
         }
-        for(int i=0;i<n;i++)
-        {
-            for(int j=0;j<m1;j++)
-            {
-                for(int k=0;k<n1;k++)
-               {
-                  c[i][j]+=a[i][k]*b[k][j];
-               }
-            }
+    }
+
+    cout << "Enter elements of the second matrix:" << endl;
+    for (int i = 0; i < row2; ++i) {
+        for (int j = 0; j < col2; ++j) {
+            cin >> secondMatrix[i][j];
         }
-        for(int i=0;i<n;i++)
-        {
-            for(int j=0;j<m1;j++)
-            {
-                cout<<c[i][j]<<" ";
-            }
-            cout<<"\n";
-        }
-    }    
+    }
+
+    multiplyMatrices(firstMatrix, secondMatrix, result, row1, col1, row2, col2);
+
+    cout << "Resultant matrix:" << endl;
+    display(result, row1, col2);
+
+    // Deallocate memory
+    for (int i = 0; i < row1; ++i)
+        delete[] firstMatrix[i];
+    delete[] firstMatrix;
+
+    for (int i = 0; i < row2; ++i)
+        delete[] secondMatrix[i];
+    delete[] secondMatrix;
+
+    for (int i = 0; i < row1; ++i)
+        delete[] result[i];
+    delete[] result;
+
     return 0;
 }
-//INPUT
-//2 3
-//1 2 1
-//3 4 1
-//3 2
-//1 2 
-//1 1
-//3 7
-//OUTPUT
-//6 11 
-//10 17 
-//TIME COMPLEXITY OF THE PROGRAM
-//O(n^3)
